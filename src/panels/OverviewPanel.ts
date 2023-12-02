@@ -73,24 +73,22 @@ export class OverviewPanel {
                     vscode.window.showErrorMessage(data.value);
                     break;
                 }
-                // case 'download': {
-                //     if (!this.isDownloading && data.value) {
-                //         this.isDownloading = true;
-                //         let saveResult;
-                //         do {
-                //             saveResult = await vscode.window.showSaveDialog({
-                //                 defaultUri: vscode.Uri.file(vscode.workspace.workspaceFolders[0].uri.fsPath),
-                //                 filters: {
-                //                     'csv': ['.csv']
-                //                 }
-                //             });
-                //         } while (!saveResult);
-                //         const csv = convertArrayToCSV(data.value);
-                //         await fs.writeFile(saveResult.fsPath, csv);
-                //         vscode.window.showInformationMessage('Downloaded file: ' + saveResult.fsPath);
-                //         this.isDownloading = false;
-                //     }
-                // }
+                case 'download': {
+                    if (!this.isDownloading && data.value) {
+                        this.isDownloading = true;
+                        let saveResult;
+                        do {
+                            saveResult = await vscode.window.showSaveDialog({
+                                filters: {
+                                    'json': ['.json']
+                                }
+                            });
+                        } while (!saveResult);
+                        await fs.writeFile(saveResult.fsPath, data.value);
+                        vscode.window.showInformationMessage('Downloaded file: ' + saveResult.fsPath);
+                        this.isDownloading = false;
+                    }
+                }
             }
         });
     }
