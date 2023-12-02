@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 // imported locally
-import { OrgSummary, summarizeOrg } from '/Users/rubenhalman/IdeaProjects/sf-org-summary-core/';
+import { OrgSummary, summarizeOrg } from '/Users/rubenhalman/Projects/sf-org-summary-core/';
 import { OverviewPanel } from './panels/OverviewPanel';
 
 // This method is called the very first time a command is executed
