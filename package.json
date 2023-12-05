@@ -13,12 +13,31 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "sf-org-summary.summarizeOrg",
-        "category": "orgsummary",
-        "title": "Summarize Org"
-      }
-    ]
+			{
+				"command": "sf-org-summary.summaryrefresh",
+				"title": "Refresh Org Summary Sidebar"
+			}
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "orgsummary-view",
+          "title": "SF Org Summary",
+          "icon": "media/checklist.svg"
+        }
+      ]
+    },
+    "views": {
+      "orgsummary-view": [
+        {
+          "type": "webview",
+          "id": "orgsummary",
+          "name": "SF Org Summary",
+          "icon": "media/checklist.svg",
+          "contextualTitle": "Org Summary"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
