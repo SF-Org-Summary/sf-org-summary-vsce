@@ -1,10 +1,7 @@
 <script >
   import Spinner from "./Spinner.svelte";
   let summary;
-
-
 </script>
-<h1> Hello </h1>
 {#if !summary}
     <Spinner />
 {/if}

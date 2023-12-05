@@ -3,9 +3,9 @@ import * as fs from "mz/fs";
 import { URI, Utils } from 'vscode-uri';
 import { getNonce } from "../libs/getNonce";
 
-export class OverviewPanel {
+export class LoadingPanel {
 
-    public static currentPanel: OverviewPanel | undefined;
+    public static currentPanel: LoadingPanel | undefined;
     public static readonly viewType = "report";
     private readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
@@ -17,15 +17,15 @@ export class OverviewPanel {
             ? vscode.window.activeTextEditor.viewColumn
             : undefined;
 
-        if (OverviewPanel.currentPanel) {
-            OverviewPanel.currentPanel._panel.reveal(column);
-            OverviewPanel.currentPanel._update();
+        if (LoadingPanel.currentPanel) {
+            LoadingPanel.currentPanel._panel.reveal(column);
+            LoadingPanel.currentPanel._update();
             return;
         }
 
         const panel = vscode.window.createWebviewPanel(
-            OverviewPanel.viewType,
-            "Overview",
+            LoadingPanel.viewType,
+            "SF Org Summary",
             column || vscode.ViewColumn.One,
             {
                 enableScripts: true,
@@ -35,12 +35,12 @@ export class OverviewPanel {
                 ]
             }
         );
-        OverviewPanel.currentPanel = new OverviewPanel(panel, extensionUri);
+        LoadingPanel.currentPanel = new LoadingPanel(panel, extensionUri);
     }
 
     public static kill() {
-        OverviewPanel.currentPanel?.dispose();
-        OverviewPanel.currentPanel = undefined;
+        LoadingPanel.currentPanel?.dispose();
+        LoadingPanel.currentPanel = undefined;
     }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -51,7 +51,7 @@ export class OverviewPanel {
     }
 
     public dispose() {
-        OverviewPanel.currentPanel = undefined;
+        LoadingPanel.currentPanel = undefined;
         this._panel.dispose();
         while (this._disposables.length) {
             const x = this._disposables.pop();
@@ -95,10 +95,10 @@ export class OverviewPanel {
 
     private _getHtmlForWebview(webview: vscode.Webview) {
         const scriptUri = webview.asWebviewUri(
-            Utils.joinPath(this._extensionUri, "out/compiled", "OverviewPanel.js")
+            Utils.joinPath(this._extensionUri, "out/compiled", "LoadingPanel.js")
         );
         const cssUri = webview.asWebviewUri(
-            Utils.joinPath(this._extensionUri, "out/compiled", "OverviewPanel.css")
+            Utils.joinPath(this._extensionUri, "out/compiled", "LoadingPanel.css")
         );
         const tabulatorStyles = webview.asWebviewUri(Utils.joinPath(
             this._extensionUri,

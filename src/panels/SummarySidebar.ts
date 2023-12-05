@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "../libs/getNonce";
+import { OrgSummary, summarizeOrg } from '/Users/rubenhalman/Projects/sf-org-summary-core/';
+import { LoadingPanel } from "./LoadingPanel";
 
 export class SummarySidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -9,14 +11,10 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
-
     webviewView.webview.options = {
-      // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._extensionUri],
     };
-
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
@@ -35,6 +33,35 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
+        case "summarize": {
+          if (!data.value) {
+              return;
+          }
+          const flags = data.value;
+          const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+          LoadingPanel.createOrShow(this._extensionUri);
+		      const orgSummary: OrgSummary = await summarizeOrg(
+           flags
+          );
+          // if summary was stored in the core.
+          if(orgSummary.OutputPath){
+            vscode.workspace.openTextDocument(orgSummary.OutputPath+`/orgsummary/${orgSummary.OrgId}/${orgSummary.Timestamp}/orgsummary.json`).then(doc => {
+              vscode.window.showTextDocument(doc);
+            });
+            LoadingPanel.kill();
+          } else {
+            const wsedit = new vscode.WorkspaceEdit();
+            const filePath = vscode.Uri.file(wsPath + '/orgsummary.json');
+            wsedit.createFile(filePath, { ignoreIfExists: true, contents: Buffer.from(JSON.stringify(orgSummary))});
+            vscode.workspace.applyEdit(wsedit);
+            vscode.workspace.openTextDocument(filePath).then(doc => {
+              vscode.window.showTextDocument(doc);
+            });
+            LoadingPanel.kill();
+          }
+          // todo open json
+          break;
+      }
       }
     });
   }
