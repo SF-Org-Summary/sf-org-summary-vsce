@@ -38,6 +38,14 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
               return;
           }
           const flags = data.value;
+          if(flags.outputdirectory) {
+            let directory = await vscode.window.showOpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false
+            });
+            flags.outputdirectory = directory[0].fsPath;
+          }
           const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
           LoadingPanel.createOrShow(this._extensionUri);
 		      const orgSummary: OrgSummary = await summarizeOrg(
@@ -45,7 +53,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           );
           // if summary was stored in the core.
           if(orgSummary.OutputPath){
-            vscode.workspace.openTextDocument(orgSummary.OutputPath+`/orgsummary/${orgSummary.OrgId}/${orgSummary.Timestamp}/orgsummary.json`).then(doc => {
+            vscode.workspace.openTextDocument(orgSummary.OutputPath+`/${orgSummary.OrgId}/${orgSummary.Timestamp}/orgsummary.json`).then(doc => {
               vscode.window.showTextDocument(doc);
             });
             LoadingPanel.kill();
@@ -59,7 +67,6 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             });
             LoadingPanel.kill();
           }
-          // todo open json
           break;
       }
       }

@@ -18,8 +18,9 @@
         if (orgAlias) {
           flags['targetusername'] =  orgAlias;
         }
-        // // todo remove line!
-        // flags['components'] =  'ApexClass';
+        if(outputdirectory){
+          flags['outputdirectory'] = true;
+        }
         tsvscode.postMessage({type:"summarize", value: flags});
     }
 
