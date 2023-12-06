@@ -51,6 +51,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
 		      const orgSummary: OrgSummary = await summarizeOrg(
            flags
           );
+          vscode.window.showInformationMessage('Summary ' + orgSummary.ResultState);
           // if summary was stored in the core.
           if(orgSummary.OutputPath){
             vscode.workspace.openTextDocument(orgSummary.OutputPath+`/${orgSummary.OrgId}/${orgSummary.Timestamp}/orgsummary.json`).then(doc => {
