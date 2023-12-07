@@ -163,10 +163,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
     const styleMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/SummarySidebar.css")
     );
-
-    // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
-
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
