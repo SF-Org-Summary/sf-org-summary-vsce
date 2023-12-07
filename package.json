@@ -29,7 +29,7 @@
         {
           "id": "orgsummary-view",
           "title": "SF Org Summary",
-          "icon": "media/checklist.svg"
+          "icon": "media/os-icon.svg"
         }
       ]
     },
@@ -39,7 +39,7 @@
           "type": "webview",
           "id": "orgsummary",
           "name": "SF Org Summary",
-          "icon": "media/checklist.svg",
+          "icon": "media/os-icon.svg",
           "contextualTitle": "Org Summary"
         }
       ]
