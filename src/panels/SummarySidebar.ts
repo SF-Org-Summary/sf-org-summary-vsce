@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { getNonce } from "../libs/getNonce";
-import { OrgSummary, summarizeOrg } from '/Users/rubenhalman/Projects/sf-org-summary-core/';
+import { OrgSummary, buildBaseSummary, summarizeOrg, } from '/Users/rubenhalman/Projects/sf-org-summary-core/';
 import { LoadingPanel } from "./LoadingPanel";
 
 export class SummarySidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(private readonly _extensionUri: vscode.Uri) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -35,10 +35,15 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
         }
         case "summarize": {
           if (!data.value) {
-              return;
+            return;
           }
           const flags = data.value;
-          if(flags.outputdirectory) {
+          LoadingPanel.createOrShow(this._extensionUri);
+
+          let finalOrgSummary: OrgSummary = await buildBaseSummary(flags.targetusername);
+          const relevantFlags = ['healthcheck', 'limits', 'codeanalysis', 'tests'];
+
+          if (flags.outputdirectory) {
             let directory = await vscode.window.showOpenDialog({
               canSelectFiles: false,
               canSelectFolders: true,
@@ -46,22 +51,40 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             });
             flags.outputdirectory = directory[0].fsPath;
           }
+          for (const flag of relevantFlags) {
+            const flagObject = { 'targetusername': flags.targetusername };
+            if (flags.hasOwnProperty(flag) && flags[flag] === true) {
+              console.log('true flag', flag);
+
+              flagObject[flag] = true;
+              flagObject['keepdata'] = flags.keepdata;
+              if (typeof (flags.outputdirectory) === "string") {
+                flagObject['outputdirectory'] = flags.outputdirectory;
+              }
+              if (!flags.metadata) {
+                flagObject['metadata'] = "";
+              }
+              const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
+              console.log(`Summary for flag '${flag}': `, orgSummary);
+              // Update the finalOrgSummary with the results from the current flag
+              finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
+            }
+            // Log or use the orgSummary as needed
+          }
+          // Log or use the finalOrgSummary
+          console.log('Final Org Summary: ', finalOrgSummary);
           const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-          LoadingPanel.createOrShow(this._extensionUri);
-		      const orgSummary: OrgSummary = await summarizeOrg(
-           flags
-          );
-          vscode.window.showInformationMessage('Summary ' + orgSummary.ResultState);
+          vscode.window.showInformationMessage('Summary ' + finalOrgSummary.ResultState);
           // if summary was stored in the core.
-          if(orgSummary.OutputPath){
-            vscode.workspace.openTextDocument(orgSummary.OutputPath+`/${orgSummary.OrgId}/${orgSummary.Timestamp}/orgsummary.json`).then(doc => {
+          if (finalOrgSummary.OutputPath) {
+            vscode.workspace.openTextDocument(finalOrgSummary.OutputPath + `/${finalOrgSummary.OrgId}/${finalOrgSummary.Timestamp}/orgsummary.json`).then(doc => {
               vscode.window.showTextDocument(doc);
             });
             LoadingPanel.kill();
           } else {
             const wsedit = new vscode.WorkspaceEdit();
             const filePath = vscode.Uri.file(wsPath + '/orgsummary.json');
-            wsedit.createFile(filePath, { ignoreIfExists: true, contents: Buffer.from(JSON.stringify(orgSummary))});
+            wsedit.createFile(filePath, { ignoreIfExists: true, contents: Buffer.from(JSON.stringify(finalOrgSummary)) });
             vscode.workspace.applyEdit(wsedit);
             vscode.workspace.openTextDocument(filePath).then(doc => {
               vscode.window.showTextDocument(doc);
@@ -69,7 +92,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             LoadingPanel.kill();
           }
           break;
-      }
+        }
       }
     });
   }
@@ -104,9 +127,8 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${
-          webview.cspSource
-        }; script-src 'nonce-${nonce}';">
+        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource
+      }; script-src 'nonce-${nonce}';">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">

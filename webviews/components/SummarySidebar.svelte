@@ -1,19 +1,20 @@
 <script >
     let orgAlias ='';
     let keepdata = false;
-    let nohealthcheck = false;
-    let nolimits = false; 
-    let nocodeanalysis = false; 
-    let notests = false;
+    let healthcheck = true;
+    let limits = true; 
+    let codeanalysis = true; 
+    let tests = true;
     let outputdirectory = true;
+    let metadata = true;
 
     function summarizeOrg() {
        let flags = {
-          keepdata,
-          nohealthcheck,
-          nolimits,
-          nocodeanalysis,
-          notests
+          'keepdata':keepdata,
+          'healthcheck': healthcheck,
+          'limits': limits,
+          'codeanalysis': codeanalysis,
+          'tests': tests
         };
         if (orgAlias) {
           flags['targetusername'] =  orgAlias;
@@ -26,23 +27,25 @@
 
   </script>
 
-  <h2>Summarize Org</h2>
+  <h2>Summarize Salesforce Org</h2>
   <br/>
   <p>You can create a summary for any connected Salesforce Org by typing its org alias into the textarea below and then pressing the 'Summarize Org' button</p>
   <br/>
 
   <label for="outputdirectory">Set Output Directory</label>
-  <input type="checkbox" name="outputdirectory" id="outputdirectory" bind:value={outputdirectory} checked={outputdirectory}>
-  <label for="nohealthcheck">Skip Health Check</label>
-  <input type="checkbox" name="nohealthcheck" id="nohealthcheck" bind:value={nohealthcheck} checked={nohealthcheck}>
-  <label for="nolimits">Skip Limit Analysis</label>
-  <input type="checkbox" name="nolimits" id="nolimits" bind:value={nolimits} checked={nolimits}>
-  <label for="nocodeanalysis">Skip Code Analysis</label>
-  <input type="checkbox" name="nocodeanalysis" id="nocodeanalysis" bind:value={nocodeanalysis} checked={nocodeanalysis}>
-  <label for="notests">Skip Test Runs</label>
-  <input type="checkbox" name="notests" id="notests" bind:value={notests} checked={notests}>
+  <input type="checkbox" name="outputdirectory" id="outputdirectory" bind:checked={outputdirectory}>
+  <label for="metadata">Summarize Metadata</label>
+  <input type="checkbox" name="metadata" id="metadata" bind:checked={metadata}>
+  <label for="healthcheck">Run Health Check</label>
+  <input type="checkbox" name="healthcheck" id="healthcheck" bind:checked={healthcheck}>
+  <label for="limits">Run Limit Analysis</label>
+  <input type="checkbox" name="limits" id="limits" bind:checked={limits}>
+  <label for="codeanalysis">Run Code Analysis</label>
+  <input type="checkbox" name="codeanalysis" id="codeanalysis" bind:checked={codeanalysis}>
+  <label for="tests">Run Apex Tests</label>
+  <input type="checkbox" name="tests" id="tests" bind:checked={tests}>
   <label for="keepdata">Keep All Data</label>
-  <input type="checkbox" name="keepdata" id="keepdata" bind:value={keepdata} checked={keepdata}>
+  <input type="checkbox" name="keepdata" id="keepdata" bind:checked={keepdata}>
 
   <label for="alias">Org Alias</label>
   <input bind:value={orgAlias} name="alias"/>
