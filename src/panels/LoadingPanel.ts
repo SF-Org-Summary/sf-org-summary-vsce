@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "mz/fs";
 import { URI, Utils } from 'vscode-uri';
 import { getNonce } from "../libs/getNonce";
+import { Uri, ViewColumn, window } from "vscode";
 
 export class LoadingPanel {
 
@@ -38,6 +39,7 @@ export class LoadingPanel {
         LoadingPanel.currentPanel = new LoadingPanel(panel, extensionUri);
     }
 
+
     public static kill() {
         LoadingPanel.currentPanel?.dispose();
         LoadingPanel.currentPanel = undefined;
@@ -49,6 +51,23 @@ export class LoadingPanel {
         this._update();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     }
+
+    public static updateStatus(value: any) {
+        const column = vscode.window.activeTextEditor
+          ? vscode.window.activeTextEditor.viewColumn
+          : undefined;
+    
+        if (LoadingPanel.currentPanel) {
+            LoadingPanel.currentPanel._panel.reveal(column);
+    
+            LoadingPanel.currentPanel._panel.webview.postMessage({
+            command: "status",
+            payload: { value: value },
+          });
+    
+          return;
+        }
+      }
 
     public dispose() {
         LoadingPanel.currentPanel = undefined;
@@ -72,22 +91,6 @@ export class LoadingPanel {
                     }
                     vscode.window.showErrorMessage(data.value);
                     break;
-                }
-                case 'download': {
-                    if (!this.isDownloading && data.value) {
-                        this.isDownloading = true;
-                        let saveResult;
-                        do {
-                            saveResult = await vscode.window.showSaveDialog({
-                                filters: {
-                                    'json': ['.json']
-                                }
-                            });
-                        } while (!saveResult);
-                        await fs.writeFile(saveResult.fsPath, data.value);
-                        vscode.window.showInformationMessage('Downloaded file: ' + saveResult.fsPath);
-                        this.isDownloading = false;
-                    }
                 }
             }
         });
