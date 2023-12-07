@@ -39,10 +39,9 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           }
           const flags = data.value;
           LoadingPanel.createOrShow(this._extensionUri);
-
           let finalOrgSummary: OrgSummary = await buildBaseSummary(flags.targetusername);
           const relevantFlags = ['healthcheck', 'limits', 'codeanalysis', 'tests'];
-
+        
           if (flags.outputdirectory) {
             let directory = await vscode.window.showOpenDialog({
               canSelectFiles: false,
@@ -51,6 +50,10 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             });
             flags.outputdirectory = directory[0].fsPath;
           }
+        
+          // Displaying initial message
+          vscode.window.showInformationMessage('Starting summary process...');
+        
           for (const flag of relevantFlags) {
             const flagObject = { 'targetusername': flags.targetusername };
             if (flags.hasOwnProperty(flag) && flags[flag] === true) {
@@ -60,23 +63,38 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
                 flagObject['outputdirectory'] = flags.outputdirectory;
               }
               flagObject['metadata'] = "";
+        
+              // Displaying message for each flag execution
+              const flagMessage = this.getFlagMessage(flag, true); // true indicates it's a running message
+              vscode.window.showInformationMessage(flagMessage);
+        
               const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
               console.log(`Summary for flag '${flag}': `, orgSummary);
               finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
+        
+              // Displaying completion message for each flag
+              const flagCompletionMessage = this.getFlagMessage(flag, false); // false indicates it's a completion message
+              vscode.window.showInformationMessage(flagCompletionMessage);
             }
           }
-          console.log('metadata', flags.metadata);
+        
           if (flags.metadata) {
-              const flagObject = { 'targetusername': flags.targetusername };
-              flagObject['keepdata'] = flags.keepdata;
-              if (typeof (flags.outputdirectory) === "string") {
-                flagObject['outputdirectory'] = flags.outputdirectory;
-              }
-              const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
-              console.log(`Summary for flag metadata: `, orgSummary);
-              finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
+            const flagObject = { 'targetusername': flags.targetusername };
+            flagObject['keepdata'] = flags.keepdata;
+            if (typeof (flags.outputdirectory) === "string") {
+              flagObject['outputdirectory'] = flags.outputdirectory;
+            }
+        
+            // Displaying message for metadata execution
+            vscode.window.showInformationMessage('Processing metadata...');
+        
+            const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
+            console.log(`Summary for flag metadata: `, orgSummary);
+            finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
           }
-          console.log('Final Org Summary: ', finalOrgSummary);
+          const resultStateMessage = this.getResultStateMessage(finalOrgSummary.ResultState);
+          vscode.window.showInformationMessage(resultStateMessage);
+
           const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
           vscode.window.showInformationMessage('Summary ' + finalOrgSummary.ResultState);
           // if summary was stored in the core.
@@ -99,6 +117,32 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
         }
       }
     });
+  }
+
+  private getFlagMessage(flag: string, isRunning: boolean): string {
+    const action = isRunning ? 'Running' : 'Completed';
+  
+    switch (flag) {
+      case 'healthcheck':
+        return `${action} Health Check...`;
+      case 'limits':
+        return `${action} Org Limits Check...`;
+      case 'codeanalysis':
+        return `${action} Code Analysis...`;
+      case 'tests':
+        return `${action} Apex Tests...`;
+      default:
+        return `${action} ${flag}...`;
+    }
+  }
+  
+  private getResultStateMessage(resultState: string): string {
+    switch (resultState) {
+      case 'Success':
+        return 'Summary processed successfully.';
+      default:
+        return `Error processing summary. ResultState: ${resultState}`;
+    }
   }
 
   public revive(panel: vscode.WebviewView) {
