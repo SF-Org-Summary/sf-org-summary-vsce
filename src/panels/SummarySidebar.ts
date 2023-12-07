@@ -66,12 +66,9 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
               }
               const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
               console.log(`Summary for flag '${flag}': `, orgSummary);
-              // Update the finalOrgSummary with the results from the current flag
               finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
             }
-            // Log or use the orgSummary as needed
           }
-          // Log or use the finalOrgSummary
           console.log('Final Org Summary: ', finalOrgSummary);
           const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
           vscode.window.showInformationMessage('Summary ' + finalOrgSummary.ResultState);
