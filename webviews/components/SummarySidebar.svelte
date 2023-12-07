@@ -14,7 +14,8 @@
           'healthcheck': healthcheck,
           'limits': limits,
           'codeanalysis': codeanalysis,
-          'tests': tests
+          'tests': tests,
+          'metadata': metadata
         };
         if (orgAlias) {
           flags['targetusername'] =  orgAlias;

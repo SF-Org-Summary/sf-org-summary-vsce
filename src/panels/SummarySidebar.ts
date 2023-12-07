@@ -54,20 +54,27 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           for (const flag of relevantFlags) {
             const flagObject = { 'targetusername': flags.targetusername };
             if (flags.hasOwnProperty(flag) && flags[flag] === true) {
-              console.log('true flag', flag);
-
               flagObject[flag] = true;
               flagObject['keepdata'] = flags.keepdata;
               if (typeof (flags.outputdirectory) === "string") {
                 flagObject['outputdirectory'] = flags.outputdirectory;
               }
-              if (!flags.metadata) {
-                flagObject['metadata'] = "";
-              }
+              flagObject['metadata'] = "";
               const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
               console.log(`Summary for flag '${flag}': `, orgSummary);
               finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
             }
+          }
+          console.log('metadata', flags.metadata);
+          if (flags.metadata) {
+              const flagObject = { 'targetusername': flags.targetusername };
+              flagObject['keepdata'] = flags.keepdata;
+              if (typeof (flags.outputdirectory) === "string") {
+                flagObject['outputdirectory'] = flags.outputdirectory;
+              }
+              const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
+              console.log(`Summary for flag metadata: `, orgSummary);
+              finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
           }
           console.log('Final Org Summary: ', finalOrgSummary);
           const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
