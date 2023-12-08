@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
-import * as fs from "mz/fs";
 import { URI, Utils } from 'vscode-uri';
 import { getNonce } from "../libs/getNonce";
-import { Uri, ViewColumn, window } from "vscode";
 
 export class LoadingPanel {
 
@@ -11,7 +9,6 @@ export class LoadingPanel {
     private readonly _panel: vscode.WebviewPanel;
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
-    private isDownloading = false;
 
     public static createOrShow(extensionUri: vscode.Uri) {
         const column = vscode.window.activeTextEditor

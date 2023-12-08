@@ -5,10 +5,10 @@
   "version": "0.0.1",
   "license": "AGPL-3.0",
   "publisher": "sf-org-summary",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/SF-Org-Summary/sf-org-summary-vsce"
-	},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SF-Org-Summary/sf-org-summary-vsce"
+  },
   "engines": {
     "vscode": "^1.84.0"
   },
@@ -19,10 +19,10 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-			{
-				"command": "sf-org-summary.summaryrefresh",
-				"title": "Refresh Org Summary Sidebar"
-			}
+      {
+        "command": "sf-org-summary.summaryrefresh",
+        "title": "Refresh Org Summary Sidebar"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
@@ -89,5 +89,7 @@
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "sf-org-summary-core": "^1.0.0"
+  }
 }
