@@ -2,6 +2,8 @@
 
 Salesforce Org Summary is a powerful tool that extends into the Visual Studio Code environment, providing a seamless experience for understanding and monitoring your Salesforce Org instance(s). This extension allows you to initiate the summarization process conveniently from the sidebar, offering valuable insights into key metadata, test results, code metrics, usage of limit-related resources, and more.
 
+ [![Summary Output](media/summary.png)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)
+
 ## Features
 
 ### Component Summary
@@ -40,8 +42,4 @@ Install the Salesforce Org Summary VSCode extension seamlessly into your develop
 3. Configure your summarization preferences using the available checkboxes for each feature.
 4. Click the "Summarize Org" button to initiate the summary process.
 
-### Examples
-
-Get a summary for a Salesforce org:
-
-  <!-- ![Connection Dropdown](url_to_screenshot_or_image) -->
+ [![Summarization Process View](media/process.png)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)
