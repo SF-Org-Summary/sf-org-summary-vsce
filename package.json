@@ -4,7 +4,7 @@
   "description": "",
   "version": "0.0.1",
   "license": "AGPL-3.0",
-  "publisher": "sf-org-summary",
+  "publisher": "sforgsummary",
   "repository": {
     "type": "git",
     "url": "https://github.com/SF-Org-Summary/sf-org-summary-vsce"
