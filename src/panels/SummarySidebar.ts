@@ -39,6 +39,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           }
           const flags = data.value;
           LoadingPanel.createOrShow(this._extensionUri);
+          LoadingPanel.updateStatus('Getting Org Information...');
           let finalOrgSummary: OrgSummary = await buildBaseSummary(flags.targetusername);
           if (flags.outputdirectory) {
             let directory = await vscode.window.showOpenDialog({
@@ -57,13 +58,7 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
                 flagObject['outputdirectory'] = flags.outputdirectory;
               }
               flagObject['metadata'] = "";
-
               LoadingPanel.updateStatus(this.getFlagMessage(flag, true));
-              // LoadingPanel.currentPanel.postMessage();
-              // LoadingPanel.currentPanel.postMessage("status", );
-              // LoadingPanel._p.webview.postMessage();
-              // todo debug? replace?\
-              // LoadingPanel.webview.postMessage({"type": "status", "value": this.getFlagMessage(flag, true)});
               const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
               finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
               vscode.window.showInformationMessage(this.getFlagMessage(flag, false));
@@ -76,15 +71,9 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             if (typeof (flags.outputdirectory) === "string") {
               flagObject['outputdirectory'] = flags.outputdirectory;
             }
-        
-            // Displaying message for metadata execution
-            vscode.window.showInformationMessage('Processing metadata...');
-        
+            LoadingPanel.updateStatus('Creating Metadata Overview...');
             const orgSummary: OrgSummary = await summarizeOrg(flagObject, finalOrgSummary);
-            console.log(`Summary for flag metadata: `, orgSummary);
             finalOrgSummary = { ...finalOrgSummary, ...orgSummary };
-
-
           }
           const resultStateMessage = this.getResultStateMessage(finalOrgSummary.ResultState);
           vscode.window.showInformationMessage(resultStateMessage);
