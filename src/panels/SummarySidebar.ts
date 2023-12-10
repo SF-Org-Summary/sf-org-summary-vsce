@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { getNonce } from "../libs/getNonce";
 import { LoadingPanel } from "./LoadingPanel";
-import { OrgSummary, buildBaseSummary, summarizeOrg } from "sf-org-summary-core";
+// import { OrgSummary, buildBaseSummary, summarizeOrg } from "sf-org-summary-core";
+import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "/Users/rubenhalman/Projects/sf-org-summary-core/dist";
 
 export class SummarySidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -100,8 +101,18 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
             return;
           }
           const flags = data.value;
+          const root = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri;
+          let selectedSummary = await vscode.window.showOpenDialog({
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+            defaultUri: root,
+            filters: {
+              'JSON': ['.json']
+            }
+          });
           // Select JSON
-
+          const res = await uploadSummary(flags.targetusername, selectedSummary[0].fsPath);
           // upload method core
 
           // show spinner while uploading

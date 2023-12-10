@@ -26,14 +26,11 @@
     }
 
     function uploadSummaryToOrg() {
-        if (monitoringalias && monitoringalias !== '') {
+        let flags = {};
+        if (monitoringorg && monitoringalias) {
           flags['targetusername'] =  monitoringalias;
         } else {
           flags['targetusername'] =  orgAlias;
-        }
-
-        if(outputdirectory){
-          flags['outputdirectory'] = true;
         }
         tsvscode.postMessage({type:"upload", value: flags});
     }
