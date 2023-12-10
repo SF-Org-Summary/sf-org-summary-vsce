@@ -95,6 +95,19 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "upload": {
+          if (!data.value) {
+            return;
+          }
+          const flags = data.value;
+          // Select JSON
+
+          // upload method core
+
+          // show spinner while uploading
+
+          break;
+        }
       }
     });
   }

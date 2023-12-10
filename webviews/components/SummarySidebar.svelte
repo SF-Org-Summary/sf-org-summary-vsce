@@ -1,5 +1,6 @@
 <script >
     let orgAlias ='';
+    let monitoringalias ='';
     let keepdata = false;
     let healthcheck = true;
     let limits = true; 
@@ -7,6 +8,7 @@
     let tests = true;
     let outputdirectory = true;
     let metadata = true;
+    let monitoringorg = false;
 
     function summarizeOrg() {
        let flags = {
@@ -20,16 +22,26 @@
         if (orgAlias) {
           flags['targetusername'] =  orgAlias;
         }
+        tsvscode.postMessage({type:"summarize", value: flags});
+    }
+
+    function uploadSummaryToOrg() {
+        if (monitoringalias && monitoringalias !== '') {
+          flags['targetusername'] =  monitoringalias;
+        } else {
+          flags['targetusername'] =  orgAlias;
+        }
+
         if(outputdirectory){
           flags['outputdirectory'] = true;
         }
-        tsvscode.postMessage({type:"summarize", value: flags});
+        tsvscode.postMessage({type:"upload", value: flags});
     }
 
   </script>
 
+<br />
   <h2>Summarize Salesforce Org</h2>
-  <br/>
   <p>You can create a summary for any connected Salesforce Org by typing its org alias into the textarea below and then pressing the 'Summarize Org' button</p>
   <br/>
 
@@ -51,7 +63,19 @@
   <label for="alias">Org Alias</label>
   <input bind:value={orgAlias} name="alias"/>
   <button on:click={summarizeOrg}>Summarize Org</button>
+  <br />
+  <br />
+  <h2>Upload Summary</h2>
+  <p>If you want to use the summaries in Salesforce for logging/reporting puproses, you can upload a summary to an Org using our prepacked data model and upload feature below. Make sure you install the data model before uploading the summary.</p>
+  <br/>
 
+  <label for="monitoringorg">Upload Result to a different Org</label>
+  <input type="checkbox" name="monitoringorg" id="monitoringorg" bind:checked={monitoringorg}>
+  {#if monitoringorg}
+    <label for="monitoringalias">Monitoring Org Alias</label>
+    <input bind:value={monitoringalias} name="monitoringalias"/>
+  {/if}
+  <button on:click={uploadSummaryToOrg}>Upload Summary to Org</button>
   <style>
     * {
     box-sizing: border-box;
@@ -65,3 +89,4 @@
     border-width: 1px;
     }
   </style>
+  
