@@ -111,11 +111,13 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
               'JSON': ['.json']
             }
           });
-          // Select JSON
+          LoadingPanel.createOrShow(this._extensionUri);
+          LoadingPanel.updateStatus('Inserting OrgSummary Record...');
           const res = await uploadSummary(flags.targetusername, selectedSummary[0].fsPath);
-          // upload method core
-
-          // show spinner while uploading
+          LoadingPanel.kill();
+          if(res){
+            vscode.window.showInformationMessage('Orgsummary inserted: ' + res.id);
+          }
 
           break;
         }
