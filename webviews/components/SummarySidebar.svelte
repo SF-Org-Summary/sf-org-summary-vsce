@@ -63,7 +63,7 @@
   <br />
   <br />
   <h2>Upload Summary</h2>
-  <p>If you want to use the summaries in Salesforce for logging/reporting puproses, you can upload a summary to an Org using our prepacked data model and upload feature below. Make sure you install the data model before uploading the summary.</p>
+  <p>If you want to use the summaries in Salesforce for logging/reporting puproses, you can upload a summary to an Org using our prepacked data model and upload feature below. Make sure to install the <a href="https://github.com/SF-Org-Summary/sf-org-summary-sfapp">Org Summary Salesforce App</a> before executing any upload.</p>
   <br/>
 
   <label for="monitoringorg">Upload Result to a different Org</label>
