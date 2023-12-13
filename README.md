@@ -2,8 +2,6 @@
 
 Salesforce Org Summary is a powerful tool that extends into the Visual Studio Code environment, providing a seamless experience for understanding and monitoring your Salesforce Org instance(s). This extension allows you to initiate the summarization process conveniently from the sidebar, offering valuable insights into key metadata, test results, code metrics, usage of limit-related resources, and more.
 
- [![Summary Output](media/summary.png)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)
-
 ## Features
 
 ### Component Summary
@@ -34,12 +32,21 @@ Install the Salesforce Org Summary VSCode extension seamlessly into your develop
 2. Go to Extensions (you can use `Ctrl+Shift+X`).
 3. Search for "Salesforce Org Summary" and click Install.
 
-## Usage
-
+## Summarize An Org
+    
 1. Open the Salesforce Org Summary sidebar.
-2. In the provided text area, enter the alias of the Salesforce Org connection you want to scan. Alternatively, click the dropdown arrow to choose from a list of prefetched connections.
-
-3. Configure your summarization preferences using the available checkboxes for each feature.
+2. Enter the alias of the Salesforce Org connection in the provided text area. Alternatively, use the dropdown arrow to select from a list of prefetched connections.
+3. Configure summarization preferences with checkboxes for each feature.
 4. Click the "Summarize Org" button to initiate the summary process.
 
- [![Summarization Process View](media/process.png)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)
+[![Summarization Process View](media/summarize.jpg)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)
+
+## Uploading Summary to Salesforce
+
+The extension provides functionality to upload summarized data to Salesforce. Use the following steps to enhance your monitoring capabilities:
+    
+1. After the summary process, explore the generated summary files and go to the Upload Tab.
+2. Enter the alias of the Salesforce Org connection in the provided text area. Alternatively, use the dropdown arrow to select from a list of prefetched connections.
+4. Click the "Upload Summary to Org" button to initiate the summary process.
+
+[![Summarization Process View](media/upload.jpg)](https://github.com/SF-Org-Summary/sf-org-summary-vsce)

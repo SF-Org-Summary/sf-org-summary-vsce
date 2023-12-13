@@ -2,7 +2,7 @@
   "name": "sf-org-summary",
   "displayName": "sf-org-summary",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "AGPL-3.0",
   "publisher": "sforgsummary",
   "repository": {
@@ -90,6 +90,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "sf-org-summary-core": "^1.0.0"
+    "sf-org-summary-core": "^1.1.0"
   }
 }

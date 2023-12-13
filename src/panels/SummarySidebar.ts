@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { getNonce } from "../libs/getNonce";
 import { LoadingPanel } from "./LoadingPanel";
-import { OrgSummary, buildBaseSummary, summarizeOrg } from "sf-org-summary-core";
+import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "sf-org-summary-core";
+// import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "/Users/rubenhalman/Projects/sf-org-summary-core/dist";
 
 export class SummarySidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -92,6 +93,30 @@ export class SummarySidebar implements vscode.WebviewViewProvider {
               vscode.window.showTextDocument(doc);
             });
             LoadingPanel.kill();
+          }
+          break;
+        }
+        case "upload": {
+          if (!data.value) {
+            return;
+          }
+          const flags = data.value;
+          const root = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri;
+          let selectedSummary = await vscode.window.showOpenDialog({
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+            defaultUri: root,
+            filters: {
+              'JSON': ['.json']
+            }
+          });
+          LoadingPanel.createOrShow(this._extensionUri);
+          LoadingPanel.updateStatus('Inserting Org Summary Record(s)...');
+          const res = await uploadSummary(flags.targetusername, selectedSummary[0].fsPath);
+          LoadingPanel.kill();
+          if(res){
+            vscode.window.showInformationMessage('Org Summary Inserted: ' + res.id);
           }
           break;
         }
