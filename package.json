@@ -3,6 +3,7 @@
   "displayName": "sf-org-summary",
   "description": "",
   "version": "0.1.0",
+  "icon": "media/oslogo.png",
   "license": "AGPL-3.0",
   "publisher": "sforgsummary",
   "repository": {
