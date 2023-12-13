@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { getNonce } from "../libs/getNonce";
 import { LoadingPanel } from "./LoadingPanel";
-// import { OrgSummary, buildBaseSummary, summarizeOrg } from "sf-org-summary-core";
-import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "/Users/rubenhalman/Projects/sf-org-summary-core/dist";
+import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "sf-org-summary-core";
+// import { OrgSummary, buildBaseSummary, summarizeOrg, uploadSummary } from "/Users/rubenhalman/Projects/sf-org-summary-core/dist";
 
 export class SummarySidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
